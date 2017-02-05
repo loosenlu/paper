@@ -103,16 +103,13 @@ nodes_info = cache_info(nodes);
 min_load_node_index = ...
     find([nodes_info.load_factor] == min([nodes_info.load_factor]));
 
-min_load_node = nodes_info(min_load_node_index);
-
 % each appropriate node don't have enough cache sapce;
-if min_load_node.load_factor == 1
+if min([nodes_info.load_factor]) == 1
     return
 end
 
 % maybe there are several nodes has same load factor;
-candidate_cache_nodes = ...
-    nodes_info([nodes_info.load_factor] == min_load_node.load_factor);
+candidate_cache_nodes = nodes_info(min_load_node_index);
 
 [~, user_num] = size(users);
 [~, node_num] = size(candidate_cache_nodes);
