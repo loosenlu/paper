@@ -1,0 +1,9 @@
+function [min_time, allocation_matrix] = ...
+            simulator(cache_node_num, user_num, obj_num, limited_time)
+
+[delay_matrix, user_location] = ...
+        topology_initialization(cache_node_num, user_num);
+
+user_cost_matrix = get_user_cost_matrix(delay_matrix, user_location);
+[min_time, allocation_matrix]= ...
+    compute_min_time(user_cost_matrix, obj_num, limited_time);
