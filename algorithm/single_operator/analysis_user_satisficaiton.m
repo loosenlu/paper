@@ -1,12 +1,12 @@
-function [sys_time_result] = ...
-    analysis_sys_info_from_user(delay_matrix, users_location, obj_num, max_user_num, limited_time, limited_space)
+function [users_satisfication_result] = ...
+    analysis_user_satisficaiton(delay_matrix, users_location, obj_num, max_user_num, limited_time, limited_space, satisfication)
 
 
 [nodes_num, ~] = size(delay_matrix);
 cache_info = generate_cache_info(nodes_num, limited_space);
 
 
-sys_time_result = zeros(3, max_user_num);
+users_satisfication_result = zeros(3, max_user_num);
 
 
 for i = 1 : max_user_num
@@ -27,8 +27,12 @@ for i = 1 : max_user_num
     [visited_time_with_balance] = acquire_user_time(user_cost_matrix, located_matrix_with_balance);
     [visited_time_least_time] = acquire_user_time(user_cost_matrix, located_matrix_least_time);
     
-    sys_time_result(1, i) = sum(sum(visited_time_least_time)) / i;
-    sys_time_result(2, i) = sum(sum(visited_time_no_balance)) / i;
-    sys_time_result(3, i) = sum(sum(visited_time_with_balance)) / i;
+    temp_sa_matrix = zeros(i, 3);
+    temp_sa_matrix(:, 1) = sum(visited_time_least_time <= limited_time, 2) / obj_num;
+    temp_sa_matrix(:, 2) = sum(visited_time_no_balance <= limited_time, 2) / obj_num;
+    temp_sa_matrix(:, 3) = sum(visited_time_with_balance <= limited_time, 2) / obj_num;
+    
+    
+    users_satisfication_result(:, i) = (sum(temp_sa_matrix >= satisfication) / i)';
     
 end
