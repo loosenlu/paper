@@ -17,6 +17,8 @@ info.solution_sets = {};
 info.user_recorder = {};
 
 info.limited_time = limited_time;
+info.located_recorder = [];
+
 info.cache_info = cache_info;
 
 for i = 1 : user_num  
@@ -27,6 +29,7 @@ end
 
 for i = 1 : obj_num
     
+    info.located_recorder = [];
     [info, located_vector] = ...
         locate_the_obj(info, user_cost_matrix, cache_node_num);       
     
@@ -75,11 +78,14 @@ function [info, located_vector] = ...
 [~, num] = size(info.solution_sets);
 located_vector = zeros(1, cache_nodes_num);
 
+info.located_recorder = zeros(1, num);
+
 for i = 1 : num
     users = info.user_recorder{i};
     nodes = info.solution_sets{i};
     [located_index, info] = ...
         get_located_index_with_balance(info, user_cost_matrix, users, nodes);
+    info.located_recorder(i) = located_index;
     
     if located_index ~= 0
         located_vector(located_index) = 1;
@@ -130,10 +136,12 @@ for i = 1 : node_num
 end
 
 % update the cache infomation
-cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-cache_info(located_index).load_factor = ...
-    cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
-info.cache_info = cache_info;
+if  ~any(info.located_recorder == located_index)
+    cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
+    cache_info(located_index).load_factor = ...
+        cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
+    info.cache_info = cache_info;
+end
 
 
 
@@ -147,9 +155,19 @@ cache_info = info.cache_info;
 located_index = 0;
 
 processed_user_cost_matrix = user_cost_matrix(users, :);
-customer_satisfaction_vector = sum(processed_user_cost_matrix <= info.limited_time);
+
+if size(users) ~= 1
+    customer_satisfaction_vector = sum(processed_user_cost_matrix <= info.limited_time);
+else
+    customer_satisfaction_vector = processed_user_cost_matrix <= info.limited_time;
+end
 
 % Find the low load nodes to process
+min_load = min([cache_info.load_factor]);
+if min_load == 1
+    return;
+end
+
 candidates_index = ...
     find([cache_info.load_factor] == min([cache_info.load_factor]));
 candidates_cache_nodes = cache_info(candidates_index);
@@ -161,18 +179,26 @@ max_satisfaction = -1;
 for i = 1 : nodes_num
     
     % 找到一个能满足最多用户QoS的节点
+    try
     now_satisfaction = ...
         customer_satisfaction_vector(candidates_cache_nodes(i).ID);
+    catch
+        disp(i)
+        disp(customer_satisfaction_vector);
+    end
+    
     if max_satisfaction < now_satisfaction
         located_index = candidates_cache_nodes(i).ID;
         max_satisfaction = now_satisfaction;
     end
 end
 
-% update the cache infomation
-cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-cache_info(located_index).load_factor = ...
-    cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
 
-info.cache_info = cache_info;
+% update the cache infomation
+if  ~any(info.located_recorder == located_index)
+    cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
+    cache_info(located_index).load_factor = ...
+        cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
+    info.cache_info = cache_info;
+end
 

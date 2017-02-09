@@ -138,11 +138,12 @@ for i = 1 : node_num
 end
 
 % update the cache infomation
-cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-cache_info(located_index).load_factor = ...
-    cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
-info.cache_info = cache_info;
-
+if  ~any(info.located_recorder == located_index)
+    cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
+    cache_info(located_index).load_factor = ...
+        cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
+    info.cache_info = cache_info;
+end
 
 
 % --------------------------------------------------------
@@ -168,8 +169,7 @@ for i = 1 : node_num
         temp_min_time = ...
             user_cost_matrix(users(j), candidates_cache_nodes(i).ID) + temp_min_time;
     end
-    if temp_min_time < min_time && ...
-            ~any(info.located_recorder == candidates_cache_nodes(i).ID)
+    if temp_min_time < min_time 
         min_time = temp_min_time;
         located_index = candidates_cache_nodes(i).ID;
     end
@@ -177,9 +177,10 @@ end
 
 
 % update the cache infomation
-cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-cache_info(located_index).load_factor = ...
-    cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
-
-info.cache_info = cache_info;
+if  ~any(info.located_recorder == located_index)
+    cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
+    cache_info(located_index).load_factor = ...
+        cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
+    info.cache_info = cache_info;
+end
 

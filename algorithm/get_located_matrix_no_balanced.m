@@ -17,6 +17,8 @@ info.solution_sets = {};
 info.user_recorder = {};
 
 info.limited_time = limited_time;
+info.located_recorder = [];
+
 info.cache_info = cache_info;
 
 for i = 1 : user_num  
@@ -27,6 +29,7 @@ end
 
 for i = 1 : obj_num
     
+    info.located_recorder = [];
     [info, located_vector] = ...
         locate_the_obj(info, user_cost_matrix, cache_node_num);       
     
@@ -75,11 +78,14 @@ function [info, located_vector] = ...
 [~, num] = size(info.solution_sets);
 located_vector = zeros(1, cache_nodes_num);
 
+info.located_recorder = zeros(1, num);
+
 for i = 1 : num
     users = info.user_recorder{i};
     nodes = info.solution_sets{i};
     [located_index, info] = ...
         get_located_index(info, user_cost_matrix, users, nodes);
+    info.located_recorder(i) = located_index;
     
     if located_index ~= 0
         located_vector(located_index) = 1;
@@ -128,11 +134,14 @@ for i = 1 : node_num
     end
 end
 
+
 % update the cache infomation
-cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-cache_info(located_index).load_factor = ...
-    cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
-info.cache_info = cache_info;
+if  ~any(info.located_recorder == located_index)
+    cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
+    cache_info(located_index).load_factor = ...
+        cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
+    info.cache_info = cache_info;
+end
 
 
 
@@ -146,7 +155,13 @@ cache_info = info.cache_info;
 located_index = 0;
 
 processed_user_cost_matrix = user_cost_matrix(users, :);
-customer_satisfaction_vector = sum(processed_user_cost_matrix <= info.limited_time);
+
+if size(users) ~= 1
+    customer_satisfaction_vector = sum(processed_user_cost_matrix <= info.limited_time);
+else
+    customer_satisfaction_vector = processed_user_cost_matrix <= info.limited_time;
+end
+
 [~, processing_sequence] = sort(customer_satisfaction_vector, 'descend');
 
 [~, sequence_length] = size(processing_sequence);
@@ -159,10 +174,12 @@ for i = 1 : sequence_length
 end
 
 
-% update the cache infomation
-cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-cache_info(located_index).load_factor = ...
-    cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
 
-info.cache_info = cache_info;
+% update the cache infomation
+if  ~any(info.located_recorder == located_index)
+    cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
+    cache_info(located_index).load_factor = ...
+        cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
+    info.cache_info = cache_info;
+end
 

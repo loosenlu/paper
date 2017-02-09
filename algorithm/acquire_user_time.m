@@ -11,6 +11,9 @@ for i = 1 : user_num
     visited_time_vector = user_cost_matrix(i, :);
     for j = 1 : obj_num
         located_index = find(located_matrix(j, :) ~= 0);
-        user_visited_time(i, j) = min(visited_time_vector(located_index));
+        if isempty(located_index) ~= 1
+            user_visited_time(i, j) = ...
+                min(visited_time_vector(located_index));
+        end
     end
 end

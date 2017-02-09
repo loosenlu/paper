@@ -1,9 +1,8 @@
-function [delay_matrix, user_location] = ...
-        topology_initialization(cache_node_number, user_number, max_time)
+function [delay_matrix, users_location] = ...
+        topology_initialization(nodes_num, users_num, max_time)
 
 % get the delay matrix 
-delay_tmp = randi(max_time, cache_node_number, cache_node_number);
+delay_tmp = randi(max_time, nodes_num, nodes_num);
 delay_matrix = tril(delay_tmp, -1) + triu(delay_tmp, 1);
 
-
-user_location = randi(cache_node_number, 1, user_number);
+users_location = randi(nodes_num, 1, users_num);
