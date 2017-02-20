@@ -1,9 +1,8 @@
-function [allocated_matrix] = get_located_matrix_user_first(process_info)
+function [allocated_matrix] = get_located_matrix_least_time(process_info)
 
 
 allocated_matrix = ...
     zeros(process_info.operator.file_objs_num, process_info.nodes_num);
-
 
 process_info.storage_done = 0;
 for i = 1 : process_info.operator.file_objs_num
@@ -185,26 +184,34 @@ function [process_info, allocated_node_index] = ...
 
 allocated_node_index = 0;
 need_to_process_nodes = process_info.cache_info.storage_info;
-visited_cost_matrix = process_info.operator.visited_cost_matrix(users_index, :);
-
 [~, users_num] = size(users_index);
-if users_num == 1
-    users_satisfication = visited_cost_matrix <= process_info.operator.qos;
-else
-    users_satisfication = sum(visited_cost_matrix <= process_info.operator.qos);
-end
+[~, nodes_num] = size(need_to_process_nodes);
+visited_cost_matrix = process_info.operator.visited_cost_matrix;
+min_visited_time = Inf;
 
-
-[~, sequence_order] = sort(users_satisfication, 'descend');
-[~, sequence_len] = size(sequence_order);
-
-
-for i = 1 : sequence_len
-    if need_to_process_nodes(sequence_order(i)).load_factor ~= 1
-        allocated_node_index = sequence_order(i);
-        break;
+for i = 1 : nodes_num
+    
+    % 如果待处理的node的缓存空间满了
+    % 需寻找新的node；
+    if need_to_process_nodes(i).load_factor == 1
+        continue;
+    end
+    
+    temp_min_visited_time = 0;
+    % 在候选集合中选取访问总代价最小的结点；
+    for j = 1 : users_num
+        temp_min_visited_time = ...
+            visited_cost_matrix(users_index(j), need_to_process_nodes(i).id) + ...
+            temp_min_visited_time;
+    end
+    
+    if temp_min_visited_time < min_visited_time
+        min_visited_time = temp_min_visited_time;
+        allocated_node_index = need_to_process_nodes(i).id;
     end
 end
+
+
 
 % update the cache infomation
 if  ~any(allocated_recorder == allocated_node_index)
@@ -231,65 +238,4 @@ if min([process_info.cache_info.storage_info.load_factor]) == 1
 end
 
 
-
-% --------------------------------------------------------
-
-% function [located_index, info] = ...
-%     process_without_enough_scpace(info, user_cost_matrix, users)
-% 
-% 
-% cache_info = info.cache_info;
-% located_index = 0;
-% 
-% processed_user_cost_matrix = user_cost_matrix(users, :);
-% 
-% if size(users) ~= 1
-%     customer_satisfaction_vector = sum(processed_user_cost_matrix <= info.limited_time);
-% else
-%     customer_satisfaction_vector = processed_user_cost_matrix <= info.limited_time;
-% end
-% 
-% [~, processing_sequence] = sort(customer_satisfaction_vector, 'descend');
-% 
-% [~, sequence_length] = size(processing_sequence);
-% for i = 1 : sequence_length
-%     
-%     if cache_info(processing_sequence(i)).load_factor ~= 1
-%         located_index = processing_sequence(i);
-%         break;
-%     end
-% end
-% 
-% 
-% 
-% % update the cache infomation
-% if  ~any(info.located_recorder == located_index)
-%     cache_info(located_index).assigned_space = 1 + cache_info(located_index).assigned_space;
-%     cache_info(located_index).load_factor = ...
-%         cache_info(located_index).assigned_space / cache_info(located_index).sum_sapce;
-%     info.cache_info = cache_info;
-% end
-
-
-% --------------------------------------------------------
-% function [info, located_vector] = ...
-%     locate_the_obj(info, user_cost_matrix, cache_nodes_num)
-% 
-% 
-% [~, num] = size(info.solution_sets);
-% located_vector = zeros(1, cache_nodes_num);
-% 
-% info.located_recorder = zeros(1, num);
-% 
-% for i = 1 : num
-%     users = info.user_recorder{i};
-%     nodes = info.solution_sets{i};
-%     [located_index, info] = ...
-%         get_located_index(info, user_cost_matrix, users, nodes);
-%     info.located_recorder(i) = located_index;
-%     
-%     if located_index ~= 0
-%         located_vector(located_index) = 1;
-%     end
-% end
 
