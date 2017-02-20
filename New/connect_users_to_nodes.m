@@ -1,4 +1,4 @@
-function [conneted_result] = get_users_connected_result(user_points, node_points)
+function [user_points] = connect_users_to_nodes(user_points, node_points)
 
 % 获取当前用户的连接情况, 即用户连接到哪一个节点上；
 % user会连接到与其最近的缓存节点；
@@ -8,7 +8,6 @@ function [conneted_result] = get_users_connected_result(user_points, node_points
 
 [~, nodes_num] = size(node_points);
 [~, users_num] = size(user_points);
-conneted_result = zeros(1, nodes_num);
 
 for i = 1 : users_num
     min_distance_node_id = 0;
@@ -20,7 +19,7 @@ for i = 1 : users_num
             min_distance = tmp_distance;
         end
     end
-    conneted_result(i) = min_distance_node_id;
+    user_points(i).conneted_id = min_distance_node_id;
 end
 
 
