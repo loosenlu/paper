@@ -20,7 +20,7 @@ for i = 1 : users_num
             min_distance = tmp_distance;
         end
     end
-    user_points(i).conneted_id = min_distance_node_id;
+    user_points(i).connected_node_id = min_distance_node_id;
     node_points(min_distance_node_id).binding_users = ...
         [node_points(min_distance_node_id).binding_users, user_points(i).user_id];
 end

@@ -9,6 +9,7 @@ nodes_distance_matrix = ...
     compute_nodes_ideal_distance_matrix(node_points);
 connected_gragh = create_connected_graph(node_points);
 
+
 nodes_distance_matrix(connected_gragh == 0) = Inf;
 
 % nodes_cost_matrix = nodes_distance_matrix / 500;
@@ -40,7 +41,9 @@ end
 
 % 找出几个离数据源较近的节点与数据源相连; 
 % 其余的均为inf,即不相连；
-connected_to_data_node_num = fix(randi((nodes_num - 1) / 2)) + 1;
+% connected_to_data_node_num = fix(randi((nodes_num - 1) / 2)) + 1;
+
+connected_to_data_node_num = 2 + randi(fix(nodes_num / 2) - 2);
 
 distance_to_data_node = nodes_distance_matrix(1, :);
 
@@ -67,7 +70,7 @@ function [connected_graph] = create_connected_graph(node_points)
 
 [~, nodes_num] = size(node_points);
 connected_graph = randi(2, nodes_num, nodes_num) - 1;
-connected_graph = tril(connected_graph, -1) + triu(connected_graph, 1);
+connected_graph = tril(connected_graph, -1) + triu(connected_graph', 0);
 connected_graph(logical(eye(size(connected_graph)))) = 1;
 
 random_sequence = randperm(nodes_num);
