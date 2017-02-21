@@ -1,0 +1,3 @@
+function [allocated_matrix] = ...
+    allocate_storage_along_route(nodes_cost_matrix, node_points, user_points)
+
