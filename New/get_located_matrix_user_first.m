@@ -1,4 +1,5 @@
-function [allocated_matrix] = get_located_matrix_user_first(process_info)
+function [allocated_matrix, process_info] = ...
+                        get_located_matrix_user_first(process_info)
 
 
 allocated_matrix = ...
@@ -25,8 +26,7 @@ for i = 1 : process_info.operator.file_objs_num
     
     if process_info.storage_done == 1
         return ;
-    end
-    
+    end 
 end
 
 
@@ -229,6 +229,3 @@ state = 1;
 if min([process_info.cache_info.storage_info.load_factor]) == 1
     state = 0;
 end
-
-
-

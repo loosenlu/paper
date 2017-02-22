@@ -14,12 +14,16 @@ user_points = generate_user_points(users_num, x_range, y_range);
 nodes_cost_matrix = get_nodes_cost_matrix(node_points);
 
 
-[allocated_matrix] = ...
+[allocated_matrix1] = ...
     allocate_storage_along_route(nodes_cost_matrix, 100, ...
                                  user_points, node_points);
                              
                              
- 
+[allocated_matrix2] = ...
+    allocate_storage_nearst_node(nodes_cost_matrix, 100, ...
+                                 user_points, node_points);
+                             
+
 
 % hold on
 % for i = 1 : nodes_num
