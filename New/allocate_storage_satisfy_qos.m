@@ -1,13 +1,12 @@
 function [allocated_matrix, node_points] = ...
-    allocate_storage_satisfy_qos(nodes_cost_matrix, objs_num, ...
-                                 user_points, node_points, qos)
+    allocate_storage_satisfy_qos(user_points, node_points, ...
+                                 objs_num, qos, nodes_cost_matrix_without_route)
                              
 
-network_info = ...
-        get_cost_matrix_without_route(nodes_cost_matrix);
 
 process_info = ...
-    init_param(user_points, node_points, objs_num, qos, network_info);
+    init_param(user_points, node_points, objs_num, qos, ...
+               nodes_cost_matrix_without_route);
     
  
 [allocated_matrix, process_info] = get_located_matrix_user_first(process_info);
@@ -19,23 +18,6 @@ for i = 1 : nodes_num
     node_points(i).load_factor = storage(i).load_factor;
 end
     
-
-
-
-
-
-% ---------------------------------------------------
-function [nodes_cost_matrix_without_route] = ...
-        get_cost_matrix_without_route(nodes_cost_matrix)
-    
-[~, nodes_num] = size(nodes_cost_matrix);
-nodes_cost_matrix_without_route = zeros(nodes_num, nodes_num);
-
-for i = 1 : nodes_num
-    nodes_cost_matrix_without_route(i, :) = ...
-                        [nodes_cost_matrix(i, :).cost];
-end
-
 
 
 

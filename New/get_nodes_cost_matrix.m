@@ -35,7 +35,7 @@ for i = 1 : nodes_num
         
         nodes_distance_matrix(i, j) = ...
         	(2 + ...
-             compute_distance(node_points(i), node_points(j)) / 1000);
+             compute_distance(node_points(i), node_points(j)) / 1);
     end
 end
 
