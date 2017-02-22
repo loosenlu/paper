@@ -42,8 +42,15 @@ feasible_sol_sets.covered_nodes = [];
 feasible_sol_sets.sol_sets = {};
 feasible_sol_sets.user_recorder = {};
 
+storage_info = process_info.cache_info.storage_info;
+
 for i = 1 : users_num
     statisfied_qos_nodes = find(obj_info.users_visited_matrix(i,:) <= qos);
+    statisfied_qos_nodes = ...
+        statisfied_qos_nodes([storage_info(statisfied_qos_nodes).load_factor] ~= 1);
+    if isempty(statisfied_qos_nodes) == 1
+        continue;
+    end
     feasible_sol_sets = find_feasible_set(feasible_sol_sets, ...
                           statisfied_qos_nodes, ...
                           obj_info.users_index(i));
