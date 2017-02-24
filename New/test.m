@@ -22,8 +22,6 @@ for i = 1 : nodes_num + 1
                         [nodes_cost_matrix(i, :).cost];
 end
 
-
-
 along_route = zeros(2, objs_num);
 nearst_node = zeros(2, objs_num);
 satisfy_qos = zeros(2, objs_num);
@@ -64,6 +62,39 @@ end
 
 [redundancy_satisfication, storage_usage_satisfication] = ... 
             analysis_algorithm_storage(allocated_matrix3, storage_limite, observation_index);
+
+along_route_user = zeros(2, users_num);
+nearst_node_user = zeros(2, users_num);
+satisfy_qos_user = zeros(2, users_num);
+for i = 1 : users_num
+
+ user_points_now = user_points(1:i);
+    
+[allocated_matrix1, ~] = ...
+    allocate_storage_along_route(nodes_cost_matrix, 100, ...
+                                 user_points_now, node_points);
+                                                          
+[allocated_matrix2, ~] = ...
+    allocate_storage_nearst_node(nodes_cost_matrix, 100, ...
+                                 user_points_now, node_points);
+                             
+[allocated_matrix3, ~] = ...
+    allocate_storage_satisfy_qos(user_points_now, node_points, 100, qos, ...
+                                 nodes_cost_matrix_without_route);
+                             
+
+[along_route_user(1, i), along_route_user(2, i)] = ...
+     analysis_algorithm_time_satisfication(user_points_now, allocated_matrix1, nodes_cost_matrix_without_route, qos);
+                             
+[nearst_node_user(1, i), nearst_node_user(2, i)] = ...
+     analysis_algorithm_time_satisfication(user_points_now, allocated_matrix2, nodes_cost_matrix_without_route, qos);
+ 
+[satisfy_qos_user(1, i), satisfy_qos_user(2, i)] = ...
+     analysis_algorithm_time_satisfication(user_points_now, allocated_matrix3, nodes_cost_matrix_without_route, qos);
+ 
+end
+
+
 
 % hold on
 % for i = 1 : nodes_num + 1

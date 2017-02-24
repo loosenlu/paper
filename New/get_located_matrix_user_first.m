@@ -29,7 +29,8 @@ for i = 1 : process_info.operator.file_objs_num
     allocated_matrix(i, :) = allocated_vector;
     
     if process_info.storage_done == 1
-        return ;
+       allocated_matrix(i:end, 1) = 1;
+       return;
     end 
 end
 
@@ -61,7 +62,6 @@ for i = 1 : users_num
                           statisfied_qos_nodes, ...
                           obj_info.users_index(i));
 end
-
 
 
 function [feasible_sol_sets] = ...
