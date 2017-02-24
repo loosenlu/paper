@@ -18,6 +18,10 @@ for i = 1 : process_info.operator.file_objs_num
     obj_info.users_visited_matrix = users_visited_matrix_need_obj;
     
     feasible_sol_sets = solve_feasible_sets(process_info, obj_info);
+    if isempty(feasible_sol_sets) == 1
+        allocated_matrix(i, 1) = 1;
+        continue;
+    end
     
     [process_info, allocated_vector] = ...
             allocate_node_to_store_obj(process_info, feasible_sol_sets);
@@ -48,8 +52,10 @@ for i = 1 : users_num
     statisfied_qos_nodes = find(obj_info.users_visited_matrix(i,:) <= qos);
     statisfied_qos_nodes = ...
         statisfied_qos_nodes([storage_info(statisfied_qos_nodes).load_factor] ~= 1);
+    % 如果下面判断成立，表明当前网络中不再包含满足用户需求，且还有空间的节点了
     if isempty(statisfied_qos_nodes) == 1
-        continue;
+        feasible_sol_sets = [];
+        return;
     end
     feasible_sol_sets = find_feasible_set(feasible_sol_sets, ...
                           statisfied_qos_nodes, ...

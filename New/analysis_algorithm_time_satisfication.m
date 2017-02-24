@@ -1,5 +1,5 @@
 function [average_visited_time, users_satisfication] = ... 
-            analysis_algorithm(user_points, allocated_matrix, visited_cost_matrix, qos)
+            analysis_algorithm_time_satisfication(user_points, allocated_matrix, visited_cost_matrix, qos)
 
 [~, users_num] = size(user_points);
 [objs_num, ~] = size(allocated_matrix);
@@ -19,7 +19,6 @@ end
 average_visited_time = sum(sum(users_really_visited_time)) / (users_num * objs_num);
 users_satisfication_percent = ...
     sum(users_really_visited_time <= qos, 2) / objs_num;
-% 满意率高于90%的用户数
-users_satisfication = sum(users_satisfication_percent >= 0.8) / users_num;
+users_satisfication = sum(users_satisfication_percent) / users_num;
 
 

@@ -5,7 +5,9 @@ x_range = 5;
 y_range = 5;
 storage_limite = 50;
 qos = 5;
-objs_num = 150;
+objs_num = 200;
+
+observation_index = 168;
 
 
 node_points = generate_node_points(nodes_num, storage_limite, x_range, y_range);
@@ -44,23 +46,31 @@ for i = 1 : objs_num
 
 
 [along_route(1, i), along_route(2, i)] = ...
-     analysis_algorithm(user_points, allocated_matrix1, nodes_cost_matrix_without_route, qos);
+     analysis_algorithm_time_satisfication(user_points, allocated_matrix1, nodes_cost_matrix_without_route, qos);
                              
 [nearst_node(1, i), nearst_node(2, i)] = ...
-     analysis_algorithm(user_points, allocated_matrix2, nodes_cost_matrix_without_route, qos);
+     analysis_algorithm_time_satisfication(user_points, allocated_matrix2, nodes_cost_matrix_without_route, qos);
  
  [satisfy_qos(1, i), satisfy_qos(2, i)] = ...
-     analysis_algorithm(user_points, allocated_matrix3, nodes_cost_matrix_without_route, qos);
+     analysis_algorithm_time_satisfication(user_points, allocated_matrix3, nodes_cost_matrix_without_route, qos);
 
 end
 
+[redundancy_route, storage_usage_route] = ... 
+            analysis_algorithm_storage(allocated_matrix1, storage_limite, observation_index);
+        
+[redundancy_nearst, storage_usage_nearst] = ... 
+            analysis_algorithm_storage(allocated_matrix2, storage_limite, observation_index);
 
-hold on
-for i = 1 : nodes_num + 1
-    plot(node_points(i).x, node_points(i).y, 'ro');
-end
+[redundancy_satisfication, storage_usage_satisfication] = ... 
+            analysis_algorithm_storage(allocated_matrix3, storage_limite, observation_index);
 
-for i = 1 : users_num
-    plot(user_points(i).x, user_points(i).y, 'b*');
-end
-hold off
+% hold on
+% for i = 1 : nodes_num + 1
+%     plot(node_points(i).x, node_points(i).y, 'ro');
+% end
+% 
+% for i = 1 : users_num
+%     plot(user_points(i).x, user_points(i).y, 'b*');
+% end
+% hold off

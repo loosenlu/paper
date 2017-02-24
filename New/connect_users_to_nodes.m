@@ -35,9 +35,12 @@ for i = 1 : users_num
     
     [~, order] = sort([distance_sequence.distance]);
     connected_id = distance_sequence(order(randi(3))).node_id;
+    user_points(i).distance = compute_distance(user_points(i), ...
+                                               node_points(connected_id));  
     user_points(i).connected_node_id = connected_id;
     node_points(connected_id).binding_users = ...
         [node_points(connected_id).binding_users, user_points(i).user_id];
+
 end
 
 
