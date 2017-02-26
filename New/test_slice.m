@@ -6,7 +6,7 @@ y_range = 5;
 storage_limit = 50;
 % ³õÊ¼»¯ÍøÂçÍØÆË
 node_points = generate_node_points(nodes_num, storage_limit, x_range, y_range);
-nodes_cost_matrix = get_nodes_cost_matrix(node_points);
+[nodes_cost_matrix, nodes_topology] = get_nodes_cost_matrix(node_points);
 nodes_cost_matrix_without_route = zeros(nodes_num + 1, nodes_num + 1);
 for i = 1 : nodes_num + 1
     nodes_cost_matrix_without_route(i, :) = ...
@@ -14,10 +14,16 @@ for i = 1 : nodes_num + 1
 end
 
 
+for i = 1 : nodes_num + 1
+    node_points(i).storage_used = 0;
+    node_points(i).load_factor = 0;
+end
+
+
 
 % SLICE 1
 users_num_1 = 50;
-qos_1 = 5;
+qos_1 = 2;
 objs_num_1 = 25;
 cache_limit1 = Inf;
 
@@ -30,9 +36,9 @@ user_points_1 = generate_user_points(users_num_1, x_range, y_range);
 
 
 % SLICE 2
-users_num_2 = 80;
-qos_2 = 6;
-objs_num_2 = 35;
+users_num_2 = 50;
+qos_2 = 3;
+objs_num_2 = 25;
 cache_limit2 = Inf;
 
 user_points_2 = generate_user_points(users_num_2, x_range, y_range);
@@ -45,9 +51,9 @@ user_points_2 = generate_user_points(users_num_2, x_range, y_range);
 
 
 % SLICE 3
-users_num_3 = 100;
-qos_3 = 8;
-objs_num_3 = 35;
+users_num_3 = 50;
+qos_3 = 4;
+objs_num_3 = 25;
 cache_limit3 = Inf;
 
 user_points_3 = generate_user_points(users_num_2, x_range, y_range);
@@ -61,8 +67,8 @@ user_points_3 = generate_user_points(users_num_2, x_range, y_range);
                              
 % SLICE 4
 users_num_4 = 50;
-qos_4 = 9;
-objs_num_4 = 55;
+qos_4 = 5;
+objs_num_4 = 25;
 cache_limit4 = Inf;
 
 user_points_4 = generate_user_points(users_num_4, x_range, y_range);
@@ -74,9 +80,9 @@ user_points_4 = generate_user_points(users_num_4, x_range, y_range);
 
 
 % SLICE 5
-users_num_5 = 80;
-qos_5 = 10;
-objs_num_5 = 60;
+users_num_5 = 50;
+qos_5 = 7;
+objs_num_5 = 25;
 cache_limit5 = Inf;
 
 user_points_5 = generate_user_points(users_num_5, x_range, y_range);
@@ -89,9 +95,9 @@ user_points_5 = generate_user_points(users_num_5, x_range, y_range);
 
 
 % SLICE 6
-users_num_6 = 100;
-qos_6 = 11;
-objs_num_6 = 65;
+users_num_6 = 50;
+qos_6 = 8;
+objs_num_6 = 25;
 cache_limit6 = Inf;
 
 user_points_6 = generate_user_points(users_num_6, x_range, y_range);
@@ -104,8 +110,8 @@ user_points_6 = generate_user_points(users_num_6, x_range, y_range);
                              
 % SLICE 7
 users_num_7 = 50;
-qos_7 = 12;
-objs_num_7 = 60;
+qos_7 = 8;
+objs_num_7 = 25;
 cache_limit7 = Inf;
 
 user_points_7 = generate_user_points(users_num_7, x_range, y_range);
@@ -117,9 +123,9 @@ user_points_7 = generate_user_points(users_num_7, x_range, y_range);
 
 
 % SLICE 8
-users_num_8 = 80;
+users_num_8 = 50;
 qos_8 = 20;
-objs_num_8 = 100;
+objs_num_8 = 25;
 cache_limit8 = Inf;
 
 user_points_8 = generate_user_points(users_num_8, x_range, y_range);

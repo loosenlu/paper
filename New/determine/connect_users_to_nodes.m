@@ -25,9 +25,6 @@ function [user_points, node_points] = ...
 %         [node_points(min_distance_node_id).binding_users, user_points(i).user_id];
 % end
 
-
-
-
 for i = 1 : users_num
     distance_sequence = struct('distance', num2cell(ones(1, nodes_num) * Inf), ...
                                'node_id', num2cell(zeros(1, nodes_num)));
@@ -40,7 +37,6 @@ for i = 1 : users_num
     connected_id = distance_sequence(order(randi(3))).node_id;
     user_points(i).distance = compute_distance(user_points(i), ...
                                                node_points(connected_id));  
-    
     user_points(i).connected_node_id = connected_id;
     node_points(connected_id).binding_users = ...
         [node_points(connected_id).binding_users, user_points(i).user_id];

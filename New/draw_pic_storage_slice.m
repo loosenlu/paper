@@ -10,10 +10,10 @@ slice6 = sum(slice6_allocated_matrix);
 slice7 = sum(slice7_allocated_matrix);
 slice8 = sum(slice8_allocated_matrix);
 
-a = [slice1; slice2; slice3; slice4; slice5; slice6; slice7; slice8];
-a = a(1:end, 2:end);
+a = [slice1; slice2; slice3; slice4; slice5; slice6; slice7; slice8];%
+% a = a(1:end, 2:end);
 
 bar(a', 'stack');
-legend('slice 1', 'slice 2', 'slice 3','slice 4','slice 5', 'slice 6', 'slice 7', 'slice 8');
+legend( 'slice 1', 'slice 2', 'slice 3','slice 4','slice 5', 'slice 6', 'slice 7', 'slice 8');
 xlabel('Slice ID');
 ylabel('Storage View');
