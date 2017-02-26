@@ -26,7 +26,10 @@ function [user_points, node_points] = ...
 % end
 
 
-
+random_sequence = randperm(nodes_num);
+random_sequence(random_sequence == 1) = [];
+base_num = nodes_num * 3 / 5;
+base_nodes = random_sequence(1:base_num);
 
 for i = 1 : users_num
     distance_sequence = struct('distance', num2cell(ones(1, nodes_num) * Inf), ...

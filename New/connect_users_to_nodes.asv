@@ -25,6 +25,16 @@ function [user_points, node_points] = ...
 %         [node_points(min_distance_node_id).binding_users, user_points(i).user_id];
 % end
 
+
+random_sequence = randperm(nodes_num);
+len = nodes
+sequence = zeros(1, nodes_num * 2 / 5);
+for i = random_sequence
+    if i ~= 1
+        
+    end
+end
+
 for i = 1 : users_num
     distance_sequence = struct('distance', num2cell(ones(1, nodes_num) * Inf), ...
                                'node_id', num2cell(zeros(1, nodes_num)));

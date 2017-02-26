@@ -68,9 +68,6 @@ function [connected_graph] = create_connected_graph(node_points)
 
 % 
 
-
-
-
 [~, nodes_num] = size(node_points);
 
 connected_graph = randi(15, nodes_num, nodes_num);
